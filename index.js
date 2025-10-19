@@ -29,6 +29,16 @@ function addBookToLibrary(bookTitle,bookAuthor) {
     library.push(book);
 }
 
+addBookToLibrary("Simon","Simon Says");
+console.log(library);
+
+//write function to remove children div
+const removeChildren=(parent)=>{
+    while (parent.firstElementChild){
+        parent.removeChild(parent.firstElementChild);
+    }
+}
+
 //Add script in to create a table and then iterate over library, creating a row with all the details of each book
 //target table div
 const tableDiv=document.querySelector(".table");
@@ -75,4 +85,67 @@ for(let book of library){
     //append row to table
     table.appendChild(row);
 }
+
+//Add new book button that brings up a form
+const addBookButton=document.createElement("button");
+addBookButton.textContent="Add New Book";
+tableDiv.appendChild(addBookButton);
+
+//create form and append to tableDiv
+const form=document.createElement("form");
+tableDiv.appendChild(form);
+
+//add event listener to bring up a form to add book details
+addBookButton.addEventListener("click",()=>{
+    //clear contents of form
+    removeChildren(form);
+    
+    
+    const lineBreak=document.createElement("br");
+
+    const titleLabel=document.createElement("label");
+    titleLabel.textContent="Title of new book: ";
+    titleLabel.setAttribute("for", "title");
+    const titleInput=document.createElement("input");
+    titleInput.type="text";
+    titleInput.name="title";
+    titleInput.id="title";
+    form.appendChild(titleLabel);
+    form.appendChild(titleInput);
+    form.appendChild(document.createElement("br"));
+
+    const authorLabel=document.createElement("label");
+    authorLabel.textContent="Author of new book: ";
+    authorLabel.setAttribute("for", "author");
+    const authorInput=document.createElement("input");
+    authorInput.type="text";
+    authorInput.name="author";
+    authorInput.id="author";
+    form.appendChild(authorLabel);
+    form.appendChild(authorInput);
+    form.appendChild(document.createElement("br"));
+    
+
+    const submit=document.createElement("button");
+    submit.textContent="submit"
+    form.appendChild(submit)
+
+    //add event listener for submit button
+    submit.addEventListener("click",()=>{
+    
+        //extract value for title from input
+        const newTitle=titleInput.value;
+        console.log(titleInput.value);
+
+        //extract value for title from input
+        const newAuthor=authorInput.value;
+        console.log(authorInput.value);
+
+        // //call the addBookToLibrary(bookTitle,bookAuthor) function
+        // addBookToLibrary(newTitle,newAuthor);
+        // console.log(library);
+    })
+
+    
+})
 
