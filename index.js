@@ -14,7 +14,7 @@ const library=[
         read:false
     },
     {
-        id:1,
+        id:3,
         title:"Intermezzo",
         author: "Sally Rooney",
         pages:200,
@@ -70,6 +70,8 @@ function displayTable(){
     pagesHeader.textContent="Number of Pages";
     const isReadHeader=document.createElement("th");
     isReadHeader.textContent="Read?";
+    const toggleReadHeader=document.createElement("th");
+    toggleReadHeader.textContent="toggle Read";
 
     //append to headers
     headers.appendChild(idHeader);
@@ -77,6 +79,7 @@ function displayTable(){
     headers.appendChild(authorHeader);
     headers.appendChild(pagesHeader);
     headers.appendChild(isReadHeader);
+    headers.appendChild(toggleReadHeader);
 
     //append row to table
     table.appendChild(headers);
@@ -88,36 +91,77 @@ function displayTable(){
     for(let book of library){
         //create a table row
         const row=document.createElement("tr");
+        //set row id=book id
+        row.id=`row-id-${book.id}`;
+        //set initial classlist to whatver the read status is
+        row.classList.add(`${book.read}`);
         
         //create a td element for each property and append to tr
         const id=document.createElement("td");
         id.textContent=book.id;
+        id.id=`id-id-${book.id}`;
         row.appendChild(id)
 
         const title=document.createElement("td");
         title.textContent=book.title;
+        title.id=`title-id-${book.id}`;
         row.appendChild(title)
 
         const author=document.createElement("td");
         author.textContent=book.author;
+        author.id=`author-id-${book.id}`;
         row.appendChild(author);
 
         const pages=document.createElement("td");
         pages.textContent=book.pages;
+        pages.id=`pages-id-${book.id}`;
         row.appendChild(pages);
 
         const isRead=document.createElement("td");
         isRead.textContent=book.read;
+        isRead.id=`isRead-id-${book.id}`;
         row.appendChild(isRead);
+
+        //lastly add in a td for the toggle read function
+        const toggleRead=document.createElement("td");
+        const toggleReadButton=document.createElement("button");
+        toggleReadButton.textContent="toggle";
+        toggleRead.appendChild(toggleReadButton);
+        row.appendChild(toggleRead);
 
         //append row to table
         table.appendChild(row);
+
+        //Write toggle functionality
+        toggleReadButton.addEventListener("click",()=>{
+            console.log(`toggle button picked up for ${book.title}`);
+            //target row and change class to get correct conditional formatting
+            const targetRow=document.querySelector(`#${row.id}`);
+            targetRow.classList.remove(`${book.read}`);
+
+            //toggle value of read
+            book.read=!book.read;
+            console.log(library);
+
+            //now find relevant td, and set textContent to updated value
+            console.log(document.querySelector(`#${isRead.id}`));
+            const dataChange=document.querySelector(`#${isRead.id}`)
+            dataChange.textContent=book.read;
+
+            targetRow.classList.add(`${book.read}`);
+
+            
+
+        })
     }
 }
 
 //call table creator function on initial display
 displayTable();
 
+const toggleRead=function(){
+
+}
 
 //Add new book button that brings up a form
 const addBookButton=document.createElement("button");

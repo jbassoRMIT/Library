@@ -9,3 +9,11 @@ td{
 th{
     background-color: aquamarine;
 }
+
+.true{
+    color:green;
+}
+
+.false{
+    color:red;
+}
