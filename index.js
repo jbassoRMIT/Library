@@ -2,34 +2,42 @@ const library=[
     {
         id:1,
         title:"Harry Potter",
-        author: "JK Rowling"
+        author: "JK Rowling",
+        pages:400,
+        read:true
     },
     {
         id:2,
         title:"LOTR",
-        author: "JRR Tolkien"
+        author: "JRR Tolkien",
+        pages:300,
+        read:false
     },
     {
         id:1,
         title:"Intermezzo",
-        author: "Sally Rooney"
+        author: "Sally Rooney",
+        pages:200,
+        read:true
     },
 ];
 
 //Setup book constructor
-function Book(title,author){
+function Book(title,author,pages,read){
     this.id=crypto.randomUUID();
     this.title=title;
     this.author=author;
+    this.pages=pages;
+    this.read=read;
 }
 
-function addBookToLibrary(bookTitle,bookAuthor) {
+function addBookToLibrary(bookTitle,bookAuthor,numPages,isRead=false) {
     // take params, create a book then store it in the array
-    const book=new Book(bookTitle,bookAuthor);
+    const book=new Book(bookTitle,bookAuthor,numPages,isRead);
     library.push(book);
 }
 
-addBookToLibrary("Simon","Simon Says");
+addBookToLibrary("Simon","Simon Says",800,false);
 console.log(library);
 
 //write function to remove children div
@@ -41,59 +49,85 @@ const removeChildren=(parent)=>{
 
 //Add script in to create a table and then iterate over library, creating a row with all the details of each book
 //target table div
-const tableDiv=document.querySelector(".table");
+//Place inside a function so we can call it when form submits
 
-//create a table, add a table header row with column names and append to tableDiv
-const table=document.createElement("table");
-const headers=document.createElement("tr");
-const idHeader=document.createElement("th");
-idHeader.textContent="ID";
-const titleHeader=document.createElement("th");
-titleHeader.textContent="Title";
-const authorHeader=document.createElement("th");
-authorHeader.textContent="Author";
-
-//append to headers
-headers.appendChild(idHeader);
-headers.appendChild(titleHeader);
-headers.appendChild(authorHeader);
-
-//append row to table
-table.appendChild(headers);
-
-//append table to tableDiv
-tableDiv.appendChild(table);
-
-//iterate over library
-for(let book of library){
-    //create a table row
-    const row=document.createElement("tr");
+function displayTable(){
+    const tableDiv=document.querySelector(".table");
     
-    //create a td element for each property and append to tr
-    const id=document.createElement("td");
-    id.textContent=book.id;
-    row.appendChild(id)
+    //clear contents of tableDiv
+    removeChildren(tableDiv);
 
-    const title=document.createElement("td");
-    title.textContent=book.title;
-    row.appendChild(title)
+    //create a table, add a table header row with column names and append to tableDiv
+    const table=document.createElement("table");
+    const headers=document.createElement("tr");
+    const idHeader=document.createElement("th");
+    idHeader.textContent="ID";
+    const titleHeader=document.createElement("th");
+    titleHeader.textContent="Title";
+    const authorHeader=document.createElement("th");
+    authorHeader.textContent="Author";
+    const pagesHeader=document.createElement("th");
+    pagesHeader.textContent="Number of Pages";
+    const isReadHeader=document.createElement("th");
+    isReadHeader.textContent="Read?";
 
-    const author=document.createElement("td");
-    author.textContent=book.author;
-    row.appendChild(author)
+    //append to headers
+    headers.appendChild(idHeader);
+    headers.appendChild(titleHeader);
+    headers.appendChild(authorHeader);
+    headers.appendChild(pagesHeader);
+    headers.appendChild(isReadHeader);
 
     //append row to table
-    table.appendChild(row);
+    table.appendChild(headers);
+
+    //append table to tableDiv
+    tableDiv.appendChild(table);
+
+    //iterate over library
+    for(let book of library){
+        //create a table row
+        const row=document.createElement("tr");
+        
+        //create a td element for each property and append to tr
+        const id=document.createElement("td");
+        id.textContent=book.id;
+        row.appendChild(id)
+
+        const title=document.createElement("td");
+        title.textContent=book.title;
+        row.appendChild(title)
+
+        const author=document.createElement("td");
+        author.textContent=book.author;
+        row.appendChild(author);
+
+        const pages=document.createElement("td");
+        pages.textContent=book.pages;
+        row.appendChild(pages);
+
+        const isRead=document.createElement("td");
+        isRead.textContent=book.read;
+        row.appendChild(isRead);
+
+        //append row to table
+        table.appendChild(row);
+    }
 }
+
+//call table creator function on initial display
+displayTable();
+
 
 //Add new book button that brings up a form
 const addBookButton=document.createElement("button");
 addBookButton.textContent="Add New Book";
-tableDiv.appendChild(addBookButton);
+const addBookDiv=document.querySelector(".addNewBook");
+addBookDiv.appendChild(addBookButton);
 
 //create form and append to tableDiv
 const form=document.createElement("form");
-tableDiv.appendChild(form);
+addBookDiv.appendChild(form);
 
 //add event listener to bring up a form to add book details
 addBookButton.addEventListener("click",()=>{
@@ -103,6 +137,8 @@ addBookButton.addEventListener("click",()=>{
     
     const lineBreak=document.createElement("br");
 
+    //Add in input boxes for each attribute
+    //title
     const titleLabel=document.createElement("label");
     titleLabel.textContent="Title of new book: ";
     titleLabel.setAttribute("for", "title");
@@ -114,6 +150,7 @@ addBookButton.addEventListener("click",()=>{
     form.appendChild(titleInput);
     form.appendChild(document.createElement("br"));
 
+    //author
     const authorLabel=document.createElement("label");
     authorLabel.textContent="Author of new book: ";
     authorLabel.setAttribute("for", "author");
@@ -124,26 +161,76 @@ addBookButton.addEventListener("click",()=>{
     form.appendChild(authorLabel);
     form.appendChild(authorInput);
     form.appendChild(document.createElement("br"));
+
+    //numPages
+    const pagesLabel=document.createElement("label");
+    pagesLabel.textContent="Number of pages in the book: ";
+    pagesLabel.setAttribute("for", "numPages");
+    const pagesInput=document.createElement("input");
+    pagesInput.type="number";
+    pagesInput.name="numPages";
+    pagesInput.id="numPages";
+    form.appendChild(pagesLabel);
+    form.appendChild(pagesInput);
+    form.appendChild(document.createElement("br"));
+
+    //read status
+    const readLabel=document.createElement("label");
+    readLabel.textContent="Have you read the book: ";
+    readLabel.setAttribute("for", "read");
+    const readInput=document.createElement("select");
+    readInput.id="read";
+
+    //create option for - has been read
+    const isRead=document.createElement("option");
+    isRead.value=true;
+    isRead.textContent="Read"
+    //create option for - has been read
+    const notRead=document.createElement("option");
+    notRead.value=false;
+    notRead.textContent="Not read yet"
+
+    readInput.appendChild(isRead);
+    readInput.appendChild(notRead)
+    form.appendChild(readLabel);
+    form.appendChild(readInput)
+    form.appendChild(document.createElement("br"));
     
 
     const submit=document.createElement("button");
-    submit.textContent="submit"
-    form.appendChild(submit)
+    submit.textContent="submit";
+    form.appendChild(submit);
 
-    //add event listener for submit button
-    submit.addEventListener("click",()=>{
-    
-        //extract value for title from input
-        const newTitle=titleInput.value;
-        console.log(titleInput.value);
+    //target form element and add event listener for a submit action
+    form.addEventListener("submit",(e)=>{
+        e.preventDefault();
 
-        //extract value for title from input
-        const newAuthor=authorInput.value;
-        console.log(authorInput.value);
+         //extract value for title from input
+         const newTitle=document.querySelector("#title").value;
+         console.log(newTitle);
+ 
+         //extract value for title from input
+         const newAuthor=document.querySelector("#author").value;
+         console.log(newAuthor);
 
-        // //call the addBookToLibrary(bookTitle,bookAuthor) function
-        // addBookToLibrary(newTitle,newAuthor);
-        // console.log(library);
+         //extract value for pages from input
+         const newPages=document.querySelector("#numPages").value;
+         console.log(newPages);
+
+         //extract value for pages from input
+         const newRead=document.querySelector("#read").value;
+         console.log(newRead);
+ 
+         // //call the addBookToLibrary(bookTitle,bookAuthor) function
+         addBookToLibrary(newTitle,newAuthor,newPages,newRead);
+         console.log(library);
+
+         //call displayTable() function again to re-render the table
+         displayTable();
+
+         //reset values to ""
+         document.querySelector("#title").value="";
+         document.querySelector("#author").value="";
     })
 
     
