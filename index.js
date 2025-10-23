@@ -122,12 +122,19 @@ function displayTable(){
         isRead.id=`isRead-id-${book.id}`;
         row.appendChild(isRead);
 
-        //lastly add in a td for the toggle read function
+        //add in a td for the toggle read function
         const toggleRead=document.createElement("td");
         const toggleReadButton=document.createElement("button");
         toggleReadButton.textContent="toggle";
         toggleRead.appendChild(toggleReadButton);
         row.appendChild(toggleRead);
+
+        //add in a td for deletion
+        const deleteCell=document.createElement("td");
+        const deleteButton=document.createElement("button");
+        deleteButton.textContent="Delete";
+        deleteCell.appendChild(deleteButton);
+        row.appendChild(deleteCell);
 
         //append row to table
         table.appendChild(row);
@@ -149,8 +156,33 @@ function displayTable(){
             dataChange.textContent=book.read;
 
             targetRow.classList.add(`${book.read}`);
+        })
 
+        //Write delete functionality
+        deleteButton.addEventListener("click",()=>{
+            console.log(`delete button picked up for ${book.title}`);
+
+            //find the index in library to remove
+            let index=-1;
+            for(let i=0;i<library.length;i++){
+                if(library[i].id==book.id){
+                    index=i;
+                }
+            }
+
+            console.log(index);
+
+            //use splice to modify library in place
+            if(index!=-1){
+                library.splice(index,1);
+            }
+
+            //target row that corresponds with relevant id and call .remove to remove it from table
             
+
+
+            //target row and change class to get correct conditional formatting
+            const targetRow=document.querySelector(`#${row.id}`);
 
         })
     }
