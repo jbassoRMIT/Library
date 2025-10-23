@@ -178,11 +178,9 @@ function displayTable(){
             }
 
             //target row that corresponds with relevant id and call .remove to remove it from table
-            
-
-
-            //target row and change class to get correct conditional formatting
-            const targetRow=document.querySelector(`#${row.id}`);
+            const rowToDelete=document.querySelector(`#${row.id}`);
+            rowToDelete.remove();
+            console.log(library);
 
         })
     }
